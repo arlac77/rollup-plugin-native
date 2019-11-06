@@ -1,0 +1,19 @@
+{
+  "name": "rollup-plugin-native",
+  "version": "0.0.0-semantic-release",
+  "description": "Import native code with Rollup",
+  "main": "src/index.mjs",
+  "scripts": {
+    "test": "ava"
+  },
+  "keywords": [
+    "rollup",
+    "plugin"
+  ],
+  "peerDependencies": {
+    "rollup": "^1.20.0"
+  },
+  "devDependencies": {
+    "rollup": "^1.20.0"
+  }
+}
