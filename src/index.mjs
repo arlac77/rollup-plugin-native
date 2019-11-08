@@ -1,18 +1,14 @@
 import { readFile } from 'fs';
-import { resolve } from 'path';
 
 export default function native(options = {}) {
-  options = Object.assign({}, options);
-
-  const syncFiles = (options.sync || []).map((x) => resolve(x));
-
   return {
     name: 'native',
 
     load(id) {
-console.log("LOAD", id);
 
       if (/\.node$/.test(id)) {
+        console.log("LOAD", id);
+
         return new Promise((res, reject) => {
           readFile(id, (error, buffer) => {
             if (error != null) {
@@ -26,38 +22,13 @@ console.log("LOAD", id);
     },
 
     banner: `
-      function _loadNativeModule (sync, src, imports) {
-        var buf = null
-        var isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null
-        if (isNode) {
-          buf = Buffer.from(src, 'base64')
-        } else {
-          var raw = window.atob(src)
-          var rawLength = raw.length
-          buf = new Uint8Array(new ArrayBuffer(rawLength))
-          for(var i = 0; i < rawLength; i++) {
-             buf[i] = raw.charCodeAt(i)
-          }
-        }
-
-        if (imports && !sync) {
-          return WebAssembly.instantiate(buf, imports)
-        } else if (!imports && !sync) {
-          return WebAssembly.compile(buf)
-        } else {
-          var mod = new WebAssembly.Module(buf)
-          return imports ? new WebAssembly.Instance(mod, imports) : mod
-        }
-      }
+      import { createRequire } from "module";
     `.trim(),
 
     transform(code, id) {
-
-console.log("TRANSFORM",id);
       if (code && /\.node$/.test(id)) {
-        const src = Buffer.from(code, 'binary').toString('base64');
-        const sync = syncFiles.indexOf(id) !== -1;
-        return `export default function(imports){return _loadNativeModule(${+sync}, '${src}', imports)}`;
+        console.log("TRANSFORM", id);
+        return `export default function(imports){ const require = createRequire(import.meta.url); return require('../systemd-linux-arm.node'); }`;
       }
     }
   };
