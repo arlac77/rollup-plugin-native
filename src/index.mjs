@@ -10,6 +10,8 @@ export default function native(options = {}) {
     name: 'native',
 
     load(id) {
+console.log("LOAD", id);
+
       if (/\.node$/.test(id)) {
         return new Promise((res, reject) => {
           readFile(id, (error, buffer) => {
@@ -50,7 +52,9 @@ export default function native(options = {}) {
     `.trim(),
 
     transform(code, id) {
-      if (code && /\.wasm$/.test(id)) {
+
+console.log("TRANSFORM",id);
+      if (code && /\.node$/.test(id)) {
         const src = Buffer.from(code, 'binary').toString('base64');
         const sync = syncFiles.indexOf(id) !== -1;
         return `export default function(imports){return _loadNativeModule(${+sync}, '${src}', imports)}`;
