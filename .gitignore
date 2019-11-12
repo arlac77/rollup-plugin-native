@@ -1,1 +1,11 @@
+node_modules
+build
+coverage
 dist
+*.log
+*.dump
+.DS_Store
+.test
+.tmp
+
+bin
