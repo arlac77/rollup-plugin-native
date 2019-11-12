@@ -17,9 +17,18 @@ export default function native(options = {}) {
       import { createRequire } from "module";
     `,
 
+resolveId(source, importer) {
+  console.log("RESOLVEID", source);
+      if (source.endsWith('.node')) {
+    return { id: 'my-dependency-develop', external: true };
+  }
+
+  return null;
+},
+
     transform(code, id) {
       if (code && id.endsWith('.node')) {
-        console.log("TRANSFORM", code, id);
+        //console.log("TRANSFORM", code, id);
         return { 
            //code: `export default function(imports){ const require = createRequire(import.meta.url); return require('../systemd-linux-arm.node'); }`,
            code: `export const LISTEN_FDS_START = 0; export function notify() {}  export function journal_print_object() {} `,
