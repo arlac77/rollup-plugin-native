@@ -13,11 +13,11 @@
     "plugin"
   ],
   "peerDependencies": {
-    "rollup": "^1.26.5"
+    "rollup": "^1.27.0"
   },
   "devDependencies": {
     "ava": "^2.4.0",
-    "rollup": "^1.26.5"
+    "rollup": "^1.27.0"
   },
   "ava": {
     "require": [
