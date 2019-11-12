@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepare": "rollup -c",
+    "pretest": "npm run prepare",
     "test": "ava"
   },
   "keywords": [
@@ -12,9 +13,23 @@
     "plugin"
   ],
   "peerDependencies": {
-    "rollup": "^1.26.3"
+    "rollup": "^1.26.5"
   },
   "devDependencies": {
-    "rollup": "^1.26.3"
+    "ava": "^2.4.0",
+    "rollup": "^1.26.5"
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ],
+    "extensions": [
+      "mjs"
+    ],
+    "babel": false,
+    "compileEnhancements": false,
+    "files": [
+      "tests/*-test.mjs"
+    ]
   }
 }
