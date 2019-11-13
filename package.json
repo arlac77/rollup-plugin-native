@@ -1,9 +1,12 @@
 {
   "name": "rollup-plugin-native",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Import native code with Rollup",
   "main": "dist/index.js",
-  "files": ["src/**","dist/**"],
+  "files": [
+    "src/**",
+    "dist/**"
+  ],
   "scripts": {
     "prepare": "rollup -c",
     "pretest": "npm run prepare",

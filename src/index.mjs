@@ -31,10 +31,23 @@ export default function native(options = {}) {
     transform(code, id) {
       if (code && id.endsWith(".node.resolved")) {
         console.log("TRANSFORM", id);
+
+        let platformId;
+
+        const r = id.match(/(.+)(-(\w+)-(\w+)).node.resolved$/);
+        if(r) {
+          platformId = id.replace(".node.resolved",".node");
+        }
+        else {
+          const a = arch();
+          const p = platform();  
+          platformId = id.replace(".node.resolved",`-${p}-${a}.node`);
+        }
+
         return {
           code: `
 const { createRequire } = require("module");
-const { ${keys} } = createRequire(import.meta.url)("../${id.replace('.node.resolved','-' + platform() + '-' + arch() + '.node')}");
+const { ${keys} } = createRequire(import.meta.url)("${platformId}");
 export { ${keys} };`,
           map: null
         };
