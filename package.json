@@ -3,6 +3,7 @@
   "version": "0.0.0-semantic-release",
   "description": "Import native code with Rollup",
   "main": "dist/index.js",
+  "files": ["src/**","dist/**"],
   "scripts": {
     "prepare": "rollup -c",
     "pretest": "npm run prepare",
