@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "ava": "^2.4.0",
+    "esm": "^3.2.25",
     "rollup": "^1.27.0"
   },
   "ava": {
