@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-native",
-  "version": "0.0.0-semantic-release",
+  "version": "0.0.1",
   "description": "Import native code with Rollup",
   "main": "dist/index.js",
   "files": ["src/**","dist/**"],
