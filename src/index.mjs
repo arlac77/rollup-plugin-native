@@ -1,20 +1,18 @@
+import { arch, platform } from "os";
+
+const keys = ["LISTEN_FDS_START", "notify", "journal_print_object"];
+
+//const archs={'x64':'x86_64','arm':'armv7l'};
+
 export default function native(options = {}) {
   return {
     name: "native",
-
-    /*banner: `
-    import { createRequire } from "module";
-  `,*/
 
     load(id) {
       if (id.endsWith(".node.resolved")) {
         console.log("LOAD", id);
         return {
-          code: `export { LISTEN_FDS_START, notify, journal_print_object };`,
-          xcode: `
-        {export const LISTEN_FDS_START = 3;
-        export function notify(){};
-        export function journal_print_object() {};}`,
+          code: `export { ${keys} };`,
           map: null
         };
       }
@@ -36,8 +34,8 @@ export default function native(options = {}) {
         return {
           code: `
 const { createRequire } = require("module");
-const { LISTEN_FDS_START, notify, journal_print_object } = createRequire(import.meta.url)("${id.replace('.resolved','')}");
-export { LISTEN_FDS_START, notify, journal_print_object };`,
+const { ${keys} } = createRequire(import.meta.url)("../${id.replace('.node.resolved','-' + platform() + '-' + arch() + '.node')}");
+export { ${keys} };`,
           map: null
         };
       }
