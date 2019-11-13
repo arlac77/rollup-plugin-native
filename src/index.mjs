@@ -1,38 +1,45 @@
-
 export default function native(options = {}) {
   return {
-    name: 'native',
+    name: "native",
 
-/*
+    /*banner: `
+    import { createRequire } from "module";
+  `,*/
+
     load(id) {
-      if (id.endsWith('.node')) {
+      if (id.endsWith(".node.resolved")) {
         console.log("LOAD", id);
-        return { journal_print_object: "" };
+        return {
+          code: `export { LISTEN_FDS_START, notify, journal_print_object };`,
+          xcode: `
+        {export const LISTEN_FDS_START = 3;
+        export function notify(){};
+        export function journal_print_object() {};}`,
+          map: null
+        };
       }
       return null;
     },
-*/
 
-    banner: `
-      import { createRequire } from "module";
-    `,
+    resolveId(source, importer) {
+      if (source.endsWith(".node")) {
+        console.log("RESOLVEID", source, importer);
+        return { id: source + ".resolved", external: false };
+      }
 
-resolveId(source, importer) {
-  console.log("RESOLVEID", source);
-      if (source.endsWith('.node')) {
-    return { id: 'my-dependency-develop', external: true };
-  }
-
-  return null;
-},
+      return null;
+    },
 
     transform(code, id) {
-      if (code && id.endsWith('.node')) {
-        //console.log("TRANSFORM", code, id);
-        return { 
-           //code: `export default function(imports){ const require = createRequire(import.meta.url); return require('../systemd-linux-arm.node'); }`,
-           code: `export const LISTEN_FDS_START = 0; export function notify() {}  export function journal_print_object() {} `,
-           map: null };
+      if (code && id.endsWith(".node.resolved")) {
+        console.log("TRANSFORM", id);
+        return {
+          code: `
+const { createRequire } = require("module");
+const { LISTEN_FDS_START, notify, journal_print_object } = createRequire(import.meta.url)("${id.replace('.resolved','')}");
+export { LISTEN_FDS_START, notify, journal_print_object };`,
+          map: null
+        };
       }
     }
   };
