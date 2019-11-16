@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-native",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Import native code with Rollup",
   "main": "dist/index.js",
   "files": [
@@ -14,7 +14,8 @@
   },
   "keywords": [
     "rollup",
-    "plugin"
+    "plugin",
+    "native"
   ],
   "peerDependencies": {
     "rollup": "^1.27.0"
