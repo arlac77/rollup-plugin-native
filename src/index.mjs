@@ -9,7 +9,7 @@ const exportsForModule = new Map();
 
 export default function native(options) {
   options = {
-    loderMode: "createRequire",
+    loaderMode: "createRequire",
     arch: arch(),
     platform: platform(),
     ...options
@@ -68,7 +68,7 @@ export default function native(options) {
 
         let code = "";
 
-        switch (options.loderMode) {
+        switch (options.loaderMode) {
           case "dlopen":
             code = `
           const Module = require('module');
