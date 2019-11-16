@@ -7,7 +7,15 @@ const exportsForModule = new Map();
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
 
-export default function native(options = {}) {
+export default function native(options) {
+  options = {
+    loderMode: "createRequire",
+    arch: arch(),
+    platform: platform(),
+    ...options
+  };
+  console.log("OPTIONS", options);
+
   return {
     name: "native",
 
@@ -33,7 +41,6 @@ export default function native(options = {}) {
     resolveId(source, importer) {
       if (source.endsWith(".node")) {
         const resolved = resolve(dirname(importer), source + ".resolved");
-        console.log("OPTIONS", options);
         console.log("RESOLVEID", source, importer, resolved);
         return { id: resolved, external: false };
       }
@@ -51,26 +58,41 @@ export default function native(options = {}) {
         if (r) {
           platformId = id.replace(".node.resolved", ".node");
         } else {
-          const a = arch();
-          const p = platform();
-          platformId = id.replace(".node.resolved", `-${p}-${a}.node`);
+          platformId = id.replace(
+            ".node.resolved",
+            `-${options.platform}-${options.arch}.node`
+          );
         }
 
         const keys = exportsForModule.get(id);
 
-        return {
-          /*code: `
+        let code = "";
+
+        switch (options.loderMode) {
+          case "dlopen":
+            code = `
           const Module = require('module');
           const os = require('os');
+          const filename = "${platformId}";
           const m = new Module(filename);
           m.filename = filename;
-          process.dlopen(m, m.filename,os.constants.dlopen.RTLD_NOW);
-          `,
-          */
-          code: `
-const { createRequire } = require("module");
-const { ${keys} } = createRequire(import.meta.url)("${platformId}");
-export { ${keys} };`,
+          process.dlopen(m, m.filename, os.constants.dlopen.RTLD_NOW);
+          const { ${keys} } = m.exports;
+          export { ${keys} };
+          `;
+            break;
+
+          //case 'createRequire'
+          default:
+            code = `
+          const { createRequire } = require("module");
+          const { ${keys} } = createRequire(import.meta.url)("${platformId}");
+          export { ${keys} };`;
+            break;
+        }
+
+        return {
+          code,
           map: null
         };
       }
