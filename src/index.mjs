@@ -1,8 +1,9 @@
 import { arch, platform } from "os";
 import Module from "module";
 import os from "os";
+import { resolve,dirname } from "path";
 
-let keys = ["LISTEN_FDS_START", "notify", "journal_print_object"];
+let keys = [ ];
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
 
@@ -30,8 +31,9 @@ export default function native(options = {}) {
 
     resolveId(source, importer) {
       if (source.endsWith(".node")) {
-        console.log("RESOLVEID", source, importer);
-        return { id: source + ".resolved", external: false };
+        const resolved = resolve(dirname(importer), source + ".resolved");
+        console.log("RESOLVEID", source, importer, resolved);
+        return { id: resolved, external: false };
       }
 
       return null;
