@@ -1,9 +1,9 @@
 import { arch, platform } from "os";
 import Module from "module";
 import os from "os";
-import { resolve,dirname } from "path";
+import { resolve, dirname } from "path";
 
-let keys = [ ];
+const exportsForModule = new Map();
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
 
@@ -19,7 +19,8 @@ export default function native(options = {}) {
         m.filename = filename;
         process.dlopen(m, m.filename, os.constants.dlopen.RTLD_NOW);
         console.log("EXPORTS", m.exports);
-        keys = Object.keys(m.exports);
+        const keys = Object.keys(m.exports);
+        exportsForModule.set(id, keys);
 
         return {
           code: `export { ${keys} };`,
@@ -32,6 +33,7 @@ export default function native(options = {}) {
     resolveId(source, importer) {
       if (source.endsWith(".node")) {
         const resolved = resolve(dirname(importer), source + ".resolved");
+        console.log("OPTIONS", options);
         console.log("RESOLVEID", source, importer, resolved);
         return { id: resolved, external: false };
       }
@@ -53,6 +55,8 @@ export default function native(options = {}) {
           const p = platform();
           platformId = id.replace(".node.resolved", `-${p}-${a}.node`);
         }
+
+        const keys = exportsForModule.get(id);
 
         return {
           /*code: `
