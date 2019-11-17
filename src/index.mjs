@@ -1,11 +1,23 @@
 import { arch, platform } from "os";
 import Module from "module";
-import os from "os";
-import { resolve, dirname } from "path";
+import { resolve, dirname, constants } from "path";
 
 const exportsForModule = new Map();
 
 //const archs={'x64':'x86_64','arm':'armv7l'};
+
+function platformName(name, options) {
+  const r = id.match(/(.+)(-(\w+)-(\w+)).node.resolved$/);
+  if (r) {
+    return id.replace(".node.resolved", ".node");
+  } else {
+    return id.replace(
+      ".node.resolved",
+      `-${options.platform}-${options.arch}.node`
+    );
+  }
+
+}
 
 export default function native(options) {
   options = {
@@ -25,7 +37,7 @@ export default function native(options) {
         console.log("LOAD", id, filename);
         const m = new Module(filename);
         m.filename = filename;
-        process.dlopen(m, m.filename, os.constants.dlopen.RTLD_NOW);
+        process.dlopen(m, m.filename, constants.dlopen.RTLD_NOW);
         console.log("EXPORTS", m.exports);
         const keys = Object.keys(m.exports);
         exportsForModule.set(id, keys);
@@ -40,7 +52,7 @@ export default function native(options) {
 
     resolveId(source, importer) {
       if (source.endsWith(".node")) {
-        const resolved = resolve(dirname(importer), source + ".resolved");
+        const resolved = resolve(dirname(importer), platformName(source, options) + ".resolved");
         console.log("RESOLVEID", source, importer, resolved);
         return { id: resolved, external: false };
       }
@@ -51,18 +63,6 @@ export default function native(options) {
     transform(code, id) {
       if (code && id.endsWith(".node.resolved")) {
         console.log("TRANSFORM", id);
-
-        let platformId;
-
-        const r = id.match(/(.+)(-(\w+)-(\w+)).node.resolved$/);
-        if (r) {
-          platformId = id.replace(".node.resolved", ".node");
-        } else {
-          platformId = id.replace(
-            ".node.resolved",
-            `-${options.platform}-${options.arch}.node`
-          );
-        }
 
         const keys = exportsForModule.get(id);
 
