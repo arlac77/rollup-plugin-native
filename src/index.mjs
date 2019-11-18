@@ -1,7 +1,7 @@
 import { arch, platform, constants } from "os";
 import Module from "module";
 import { resolve, dirname } from "path";
-import { createFilter } from 'rollup-pluginutils';
+import { createFilter } from "rollup-pluginutils";
 
 const exportsForModule = new Map();
 
@@ -12,12 +12,8 @@ function platformName(id, options) {
   if (r) {
     return id;
   } else {
-    return id.replace(
-      ".node",
-      `-${options.platform}-${options.arch}.node`
-    );
+    return id.replace(".node", `-${options.platform}-${options.arch}.node`);
   }
-
 }
 
 export default function native(options) {
@@ -28,14 +24,14 @@ export default function native(options) {
     ...options
   };
 
-  const filter = createFilter( options.include, options.exclude );
+  const filter = createFilter(options.include, options.exclude);
 
   return {
     name: "native",
 
     load(id) {
       if (id.endsWith(".node")) {
-        console.log("LOAD", id );
+        console.log("LOAD", id);
         const m = new Module(id);
         m.filename = id;
         process.dlopen(m, id, constants.dlopen.RTLD_NOW);
@@ -50,7 +46,10 @@ export default function native(options) {
 
     resolveId(source, importer) {
       if (source.endsWith(".node")) {
-        const resolved = resolve(dirname(importer), platformName(source, options));
+        const resolved = resolve(
+          dirname(importer),
+          platformName(source, options)
+        );
         console.log("RESOLVEID", source, importer, resolved);
         return { id: resolved, external: false };
       }
@@ -59,7 +58,7 @@ export default function native(options) {
     },
 
     transform(code, id) {
-      if ( !filter( id ) ) return;
+      if (!filter(id)) return;
 
       if (code && id.endsWith(".node")) {
         console.log("TRANSFORM", id);
@@ -72,11 +71,11 @@ export default function native(options) {
 
         switch (options.loaderMode) {
           case "dlopen":
-            const formatSpecific = false ?
-              `const filename = __dirname + "/..${filename}";` :
-              `import { dirname, join } from "path";
+            const formatSpecific = false
+              ? `const filename = __dirname + "/..${filename}";`
+              : `import { dirname, join } from "path";
           import { fileURLToPath } from "url";
-          const filename = join(dirname(fileURLToPath(import.meta.url)),"/..${filename}");`;
+          const filename = join(dirname(fileURLToPath(import.meta.url)),"..${filename}");`;
 
             code = `
           import { Module } from "module";
