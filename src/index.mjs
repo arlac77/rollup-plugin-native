@@ -72,10 +72,16 @@ export default function native(options) {
 
         switch (options.loaderMode) {
           case "dlopen":
+            const formatSpecific = false ?
+              `const filename = __dirname + "/..${filename}";` :
+              `import { dirname, join } from "path";
+          import { fileURLToPath } from "url";
+          const filename = join(dirname(fileURLToPath(import.meta.url)),"/..${filename}");`;
+
             code = `
           import { Module } from "module";
           import { constants } from "os";
-          const filename = __dirname + "/..${filename}";
+          ${formatSpecific}
           const m = new Module(filename);
           m.filename = filename;
           process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
