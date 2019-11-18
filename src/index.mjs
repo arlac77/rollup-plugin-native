@@ -1,6 +1,7 @@
 import { arch, platform, constants } from "os";
 import Module from "module";
 import { resolve, dirname } from "path";
+import { createFilter } from 'rollup-pluginutils';
 
 const exportsForModule = new Map();
 
@@ -26,6 +27,9 @@ export default function native(options) {
     platform: platform(),
     ...options
   };
+
+  const filter = createFilter( options.include, options.exclude );
+
   console.log("OPTIONS", options);
 
   return {
@@ -61,6 +65,8 @@ export default function native(options) {
     },
 
     transform(code, id) {
+      if ( !filter( id ) ) return;
+
       if (code && id.endsWith(".node.resolved")) {
         console.log("TRANSFORM", id);
 

@@ -37,5 +37,8 @@
     "files": [
       "tests/*-test.mjs"
     ]
+  },
+  "dependencies": {
+    "rollup-pluginutils": "^2.8.2"
   }
 }
