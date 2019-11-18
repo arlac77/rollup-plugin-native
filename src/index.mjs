@@ -30,33 +30,27 @@ export default function native(options) {
 
   const filter = createFilter( options.include, options.exclude );
 
-  console.log("OPTIONS", options);
-
   return {
     name: "native",
 
     load(id) {
-      if (id.endsWith(".node.resolved")) {
-        const filename = id.replace(".node.resolved", ".node");
-        console.log("LOAD", id, filename);
-        const m = new Module(filename);
-        m.filename = filename;
-        process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
+      if (id.endsWith(".node")) {
+        console.log("LOAD", id );
+        const m = new Module(id);
+        m.filename = id;
+        process.dlopen(m, id, constants.dlopen.RTLD_NOW);
         console.log("EXPORTS", m.exports);
         const keys = Object.keys(m.exports);
         exportsForModule.set(id, keys);
 
-        return {
-          code: `export { ${keys} };`,
-          map: null
-        };
+        return { code: `export { ${keys} };` };
       }
       return null;
     },
 
     resolveId(source, importer) {
       if (source.endsWith(".node")) {
-        const resolved = resolve(dirname(importer), platformName(source, options) + ".resolved");
+        const resolved = resolve(dirname(importer), platformName(source, options));
         console.log("RESOLVEID", source, importer, resolved);
         return { id: resolved, external: false };
       }
@@ -67,24 +61,22 @@ export default function native(options) {
     transform(code, id) {
       if ( !filter( id ) ) return;
 
-      if (code && id.endsWith(".node.resolved")) {
+      if (code && id.endsWith(".node")) {
         console.log("TRANSFORM", id);
 
         const keys = exportsForModule.get(id);
-
-        id = id.replace(".node.resolved", ".node");
 
         let code = "";
 
         switch (options.loaderMode) {
           case "dlopen":
             code = `
-          const Module = require('module');
-          const os = require('os');
+          import { Module } from "module";
+          import { constants } from "os";
           const filename = "${id}";
           const m = new Module(filename);
           m.filename = filename;
-          process.dlopen(m, filename, os.constants.dlopen.RTLD_NOW);
+          process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
           const { ${keys} } = m.exports;
           export { ${keys} };
           `;
@@ -93,16 +85,13 @@ export default function native(options) {
           //case 'createRequire'
           default:
             code = `
-          const { createRequire } = require("module");
+          import { createRequire } from "module";
           const { ${keys} } = createRequire(import.meta.url)("${id}");
           export { ${keys} };`;
             break;
         }
 
-        return {
-          code,
-          map: null
-        };
+        return { code };
       }
     }
   };
