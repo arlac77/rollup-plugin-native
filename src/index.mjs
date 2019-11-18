@@ -66,6 +66,8 @@ export default function native(options) {
 
         const keys = exportsForModule.get(id);
 
+        const filename = id.substring(process.cwd().length);
+
         let code = "";
 
         switch (options.loaderMode) {
@@ -73,7 +75,7 @@ export default function native(options) {
             code = `
           import { Module } from "module";
           import { constants } from "os";
-          const filename = "${id}";
+          const filename = __dirname + "/..${filename}";
           const m = new Module(filename);
           m.filename = filename;
           process.dlopen(m, filename, constants.dlopen.RTLD_NOW);
@@ -86,7 +88,7 @@ export default function native(options) {
           default:
             code = `
           import { createRequire } from "module";
-          const { ${keys} } = createRequire(import.meta.url)("${id}");
+          const { ${keys} } = createRequire("file://" + __filename)("..${filename}");
           export { ${keys} };`;
             break;
         }
