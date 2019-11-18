@@ -1,13 +1,10 @@
-const { builtinModules } = require('module');
-
-const pkg = require('./package.json');
-
-const dependencies = Object.keys(pkg.dependencies || {});
+import { builtinModules } from 'module';
+import { dependencies } from './package.json';
 
 export default
   {
     input: 'src/index.mjs',
     output: { exports: 'named', file: 'dist/index.js', format: 'cjs' },
-    external: [...builtinModules, ...dependencies]
+    external: [...builtinModules, ...Object.keys(dependencies || {})]
   };
 

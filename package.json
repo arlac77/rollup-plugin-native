@@ -18,12 +18,12 @@
     "native"
   ],
   "peerDependencies": {
-    "rollup": "^1.27.0"
+    "rollup": "^1.27.1"
   },
   "devDependencies": {
     "ava": "^2.4.0",
     "esm": "^3.2.25",
-    "rollup": "^1.27.0"
+    "rollup": "^1.27.1"
   },
   "ava": {
     "require": [
