@@ -5,7 +5,7 @@ import { createFilter } from "rollup-pluginutils";
 
 const exportsForModule = new Map();
 
-//const archs={'x64':'x86_64','arm':'armv7l'};
+//const nodeArchToToGyp = { x64: "x86_64", arm: "armv7l", arm64: "aarch64" };
 
 function platformName(id, options) {
   const r = id.match(/(.+)(-(\w+)-(\w+)).node$/);

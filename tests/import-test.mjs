@@ -1,7 +1,7 @@
-import { rollup } from 'rollup';
+import { rollup } from 'rollup/dist/rollup.es.js';
 import test from 'ava';
 
-import native from '../dist/index';
+import native from '../src/index.mjs';
 
 const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
 
