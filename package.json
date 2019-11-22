@@ -21,12 +21,12 @@
     "rollup-pluginutils": "^2.8.2"
   },
   "peerDependencies": {
-    "rollup": "^1.27.2"
+    "rollup": "^1.27.4"
   },
   "devDependencies": {
     "ava": "^2.4.0",
     "esm": "^3.2.25",
-    "rollup": "^1.27.2"
+    "rollup": "^1.27.4"
   },
   "ava": {
     "require": [
