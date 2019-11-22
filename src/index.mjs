@@ -22,7 +22,7 @@ function platformName(id, options) {
   if (r) {
     return id;
   } else {
-    const arch = nodeArchitectureNames
+    const arch = options.nodeArchitectureNames
       ? options.arch
       : nodeArchToToGyp[options.arch];
     return id.replace(".node", `-${options.platform}-${arch}.node`);
