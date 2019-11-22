@@ -3,26 +3,42 @@ import Module from "module";
 import { resolve, dirname } from "path";
 import { createFilter } from "rollup-pluginutils";
 
-const exportsForModule = new Map();
-
-//const nodeArchToToGyp = { x64: "x86_64", arm: "armv7l", arm64: "aarch64" };
+const nodeArchToToGyp = {
+  x64: "x86_64",
+  arm: "armv7l",
+  arm64: "aarch64",
+  ia32: "ia32",
+  mips: "mips",
+  mipsel: "mipsel",
+  ppc: "ppc",
+  ppc64: "ppc64",
+  s390: "s390",
+  s390x: "s390x",
+  x32: "x32"
+};
 
 function platformName(id, options) {
   const r = id.match(/(.+)(-(\w+)-(\w+)).node$/);
   if (r) {
     return id;
   } else {
-    return id.replace(".node", `-${options.platform}-${options.arch}.node`);
+    const arch = nodeArchitectureNames
+      ? options.arch
+      : nodeArchToToGyp[options.arch];
+    return id.replace(".node", `-${options.platform}-${arch}.node`);
   }
 }
 
 export default function native(options) {
   options = {
     loaderMode: "createRequire",
+    nodeArchitectureNames: true,
     arch: arch(),
     platform: platform(),
     ...options
   };
+
+  const exportsForModule = new Map();
 
   const filter = createFilter(options.include, options.exclude);
 
