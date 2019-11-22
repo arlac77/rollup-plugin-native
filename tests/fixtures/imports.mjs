@@ -1,9 +1,3 @@
-import sample from './imports.node';
+import { sampleFunction, samplePoperty } from "./sample.node";
 
-const instance = sample({
-  env: {
-    foobar: (x) => t.is(x, 10, 'got callback')
-  }
-});
-
-instance.exports.main();
+export { samplePoperty, sampleFunction };

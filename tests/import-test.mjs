@@ -1,4 +1,4 @@
-import { rollup } from 'rollup/dist/rollup.es.js';
+import { rollup } from 'rollup';
 import test from 'ava';
 
 import native from '../src/index.mjs';
@@ -13,11 +13,12 @@ const testBundle = async (t, bundle) => {
   return func(t);
 };
 
-test('imports', async (t) => {
+test('imports', async t => {
   t.plan(1);
+  t.log(process.cwd());
 
   const bundle = await rollup({
-    input: 'tests/fixtures/imports.js',
+    input: 'tests/fixtures/imports.mjs',
     plugins: [
         native({
         sync: ['tests/fixtures/imports.node']

@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-native",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Import native code with Rollup",
   "main": "dist/index.js",
   "files": [
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepare": "rollup -c",
-    "pretest": "npm run prepare",
+    "pretest": "rollup -c tests/rollup.config.js",
     "test": "ava"
   },
   "keywords": [
@@ -25,20 +25,16 @@
   },
   "devDependencies": {
     "ava": "^2.4.0",
-    "esm": "^3.2.25",
     "rollup": "^1.27.4"
   },
   "ava": {
-    "require": [
-      "esm"
-    ],
     "extensions": [
-      "mjs"
+      "js"
     ],
     "babel": false,
     "compileEnhancements": false,
     "files": [
-      "tests/*-test.mjs"
+      "build/*-test.js"
     ]
   }
 }
