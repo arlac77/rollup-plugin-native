@@ -1,0 +1,8 @@
+build
+tests
+doc
+*.log
+*.tmp
+.test
+.tmp
+.travis.yml
