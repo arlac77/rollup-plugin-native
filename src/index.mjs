@@ -32,22 +32,28 @@ function platformName(id, options) {
   if (r) {
     return id;
   } else {
-    const platform = options.nodeArchitectureNames
-      ? options.platform
-      : nodePlatformToNativePlatform[options.platform];
-    const arch = options.nodeArchitectureNames
-      ? options.arch
-      : nodeArchToNativeArch[options.arch];
-    return id.replace(".node", `-${platform}-${arch}.node`);
+    const properties = {
+      basename: id.replace(".node", ''),
+      nodePlatform: platform(),
+      nativePlatform: nodePlatformToNativePlatform[platform()],
+      nodeArchitecture: arch(),
+      nativeArchitecture: nodeArchToNativeArch[arch()]
+    };
+
+    return options.platformName.replace(/\${([^}]+)}/g, (match, key, offset, string) => {
+      if (properties[key] === undefined) {
+        throw new Error(`No such key '${key}' in (${Object.keys(properties)})`);
+      }
+      return properties[key]
+    });
   }
 }
 
 export default function native(options) {
   options = {
     loaderMode: "createRequire",
-    nodeArchitectureNames: true,
-    arch: arch(),
-    platform: platform(),
+    //platformName: "${basename}-${nodePlatform}-${nodeArchitecture}.node",
+    platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node",
     ...options
   };
 
@@ -136,7 +142,7 @@ export default function native(options) {
 
 function invertKeyValues(object) {
   return Object.entries(object).reduce(
-    (all, [k,v]) => {
+    (all, [k, v]) => {
       all[v] = k;
       return all;
     },

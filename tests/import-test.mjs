@@ -7,7 +7,7 @@ test("imports", async t => {
     input: "tests/fixtures/imports.mjs",
     plugins: [
       native({
-        nodeArchitectureNames: false
+       // platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node",
       })
     ]
   });

@@ -23,7 +23,10 @@ export default {
     format: 'iife'
   },
   plugins: [
-    native()
+    native(
+    //platformName: "${basename}-${nodePlatform}-${nodeArchitecture}.node",
+    platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node",
+    )
   ]
 }
 ```
@@ -35,6 +38,8 @@ funcA(); // native call
 
 ```
 
+will generate a dlopen / require for
+"../prcompiled/module-linux-x86_64.node"
 
 ## License
 
