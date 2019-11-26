@@ -8,6 +8,8 @@ const nodePlatformToNativePlatform = {
   linux: "linux"
 };
 
+const nativePlatformToNodePlatform = invertKeyValues(nodePlatformToNativePlatform);
+
 const nodeArchToNativeArch = {
   x64: "x86_64",
   arm: "armv7l",
@@ -22,13 +24,8 @@ const nodeArchToNativeArch = {
   x32: "x32"
 };
 
-const nativeArchToNodeArch = Object.entries(nodeArchToNativeArch).reduce(
-  (all, [node, native]) => {
-    all[native] = node;
-    return all;
-  },
-  {}
-);
+const nativeArchToNodeArch = invertKeyValues(nodeArchToNativeArch);
+
 
 function platformName(id, options) {
   const r = id.match(/(.+)(-(\w+)-(\w+)).node$/);
@@ -134,4 +131,15 @@ export default function native(options) {
       }
     }
   };
+}
+
+
+function invertKeyValues(object) {
+  return Object.entries(object).reduce(
+    (all, [k,v]) => {
+      all[v] = k;
+      return all;
+    },
+    {}
+  );
 }
