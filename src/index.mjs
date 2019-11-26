@@ -1,9 +1,14 @@
 import { arch, platform, constants } from "os";
 import Module from "module";
 import { resolve, dirname } from "path";
-import { createFilter } from "rollup-pluginutils";
+import { createFilter } from "@rollup/pluginutils";
 
-const nodeArchToToGyp = {
+const nodePlatformToNativePlatform = {
+  darwin: "mac",
+  linux: "linux"
+};
+
+const nodeArchToNativeArch = {
   x64: "x86_64",
   arm: "armv7l",
   arm64: "aarch64",
@@ -17,15 +22,26 @@ const nodeArchToToGyp = {
   x32: "x32"
 };
 
+const nativeArchToNodeArch = Object.entries(nodeArchToNativeArch).reduce(
+  (all, [node, native]) => {
+    all[native] = node;
+    return all;
+  },
+  {}
+);
+
 function platformName(id, options) {
   const r = id.match(/(.+)(-(\w+)-(\w+)).node$/);
   if (r) {
     return id;
   } else {
+    const platform = options.nodeArchitectureNames
+      ? options.platform
+      : nodePlatformToNativePlatform[options.platform];
     const arch = options.nodeArchitectureNames
       ? options.arch
-      : nodeArchToToGyp[options.arch];
-    return id.replace(".node", `-${options.platform}-${arch}.node`);
+      : nodeArchToNativeArch[options.arch];
+    return id.replace(".node", `-${platform}-${arch}.node`);
   }
 }
 

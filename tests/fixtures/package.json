@@ -1,3 +1,6 @@
 {
-  "name": "sample"
+  "name": "sample",
+  "devDependencies": {
+    "node-addon-api": "^1.7.1"
+  }
 }

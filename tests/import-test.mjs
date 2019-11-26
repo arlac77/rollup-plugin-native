@@ -1,29 +1,20 @@
-import { rollup } from 'rollup';
-import test from 'ava';
+import test from "ava";
+import { rollup } from "rollup";
+import native from "../src/index.mjs";
 
-import native from '../src/index.mjs';
-
-const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
-
-const testBundle = async (t, bundle) => {
-  const { output } = await bundle.generate({ format: 'cjs' });
-  const [{ code }] = output;
-  const func = new AsyncFunction('t', `let result;\n\n${code}\n\nreturn result;`);
-
-  return func(t);
-};
-
-test('imports', async t => {
-  t.plan(1);
-  t.log(process.cwd());
-
+test("imports", async t => {
   const bundle = await rollup({
-    input: 'tests/fixtures/imports.mjs',
+    input: "tests/fixtures/imports.mjs",
     plugins: [
-        native({
-        sync: ['tests/fixtures/imports.node']
+      native({
+        nodeArchitectureNames: false
       })
     ]
   });
-  await testBundle(t, bundle);
+
+  t.truthy(bundle);
+
+  const code = await bundle.generate({ format: "cjs" });
+
+  t.regex(code.output[0].code, /createRequire\("file/);
 });

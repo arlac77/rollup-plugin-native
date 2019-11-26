@@ -28,9 +28,9 @@ napi_value my_function(napi_env env, napi_callback_info info)
     char *str = new char[len + 1];
     status = napi_get_value_string_utf8(env, args[0], str, len + 1, nullptr);
     // do something with str
-    res = 4711;
     delete[] str;
 
+    int res = 4711;
     napi_value value;
     status = napi_create_int32(env, res, &value);
     if (status != napi_ok)

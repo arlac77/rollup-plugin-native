@@ -25,7 +25,7 @@
                     "outputs": [
                         "sample.node"
                     ],
-                    "action": ["cp", "<@(PRODUCT_DIR)/sample.node", "sample-<(OS)-<!(uname -m|sed s/aarch64/arm64/|sed s/armv7l/arm/|sed s/x86_64/x64/).node"]
+                    "action": ["cp", "<@(PRODUCT_DIR)/sample.node", "sample-<(OS)-<!(uname -m).node"]
                 }
             ]
         }
