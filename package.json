@@ -22,7 +22,7 @@
     "@rollup/pluginutils": "^3.0.0"
   },
   "peerDependencies": {
-    "rollup": "^1.27.4"
+    "rollup": "^1.27.5"
   },
   "devDependencies": {
     "ava": "^2.4.0",
