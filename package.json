@@ -10,6 +10,7 @@
   "scripts": {
     "prepare": "rollup -c",
     "pretest": "rollup -c tests/rollup.config.js",
+    "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "test": "ava"
   },
   "keywords": [
@@ -25,7 +26,8 @@
   },
   "devDependencies": {
     "ava": "^2.4.0",
-    "rollup": "^1.27.4"
+    "rollup": "^1.27.5",
+    "c8": "^6.0.1"
   },
   "ava": {
     "extensions": [
