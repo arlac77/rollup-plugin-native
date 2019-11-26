@@ -52,8 +52,8 @@ function platformName(id, options) {
 export default function native(options) {
   options = {
     loaderMode: "createRequire",
-    //platformName: "${basename}-${nodePlatform}-${nodeArchitecture}.node",
-    platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node",
+    platformName: "${basename}-${nodePlatform}-${nodeArchitecture}.node",
+    //platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node",
     ...options
   };
 
