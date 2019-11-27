@@ -1,6 +1,6 @@
 import { arch, platform, constants } from "os";
 import Module from "module";
-import { resolve, dirname } from "path";
+import { resolve, dirname, basename } from "path";
 import { createFilter } from "@rollup/pluginutils";
 
 const nodePlatformToNativePlatform = {
@@ -8,7 +8,9 @@ const nodePlatformToNativePlatform = {
   linux: "linux"
 };
 
-const nativePlatformToNodePlatform = invertKeyValues(nodePlatformToNativePlatform);
+const nativePlatformToNodePlatform = invertKeyValues(
+  nodePlatformToNativePlatform
+);
 
 const nodeArchToNativeArch = {
   x64: "x86_64",
@@ -26,34 +28,36 @@ const nodeArchToNativeArch = {
 
 const nativeArchToNodeArch = invertKeyValues(nodeArchToNativeArch);
 
-
 function platformName(id, options) {
   const r = id.match(/(.+)(-(\w+)-(\w+)).node$/);
   if (r) {
     return id;
   } else {
     const properties = {
-      basename: id.replace(".node", ''),
+      dirname: dirname(id),
+      basename: basename(id,".node"),
       nodePlatform: platform(),
       nativePlatform: nodePlatformToNativePlatform[platform()],
       nodeArchitecture: arch(),
       nativeArchitecture: nodeArchToNativeArch[arch()]
     };
-
-    return options.platformName.replace(/\${([^}]+)}/g, (match, key, offset, string) => {
-      if (properties[key] === undefined) {
-        throw new Error(`No such key '${key}' in (${Object.keys(properties)})`);
+    return options.platformName.replace(
+      /\${([^}]+)}/g,
+      (match, key, offset, string) => {
+        if (properties[key] === undefined) {
+          throw new Error(`No such key '${key}' in (${properties})`);
+        }
+        return properties[key];
       }
-      return properties[key]
-    });
+    );
   }
 }
 
 export default function native(options) {
   options = {
     loaderMode: "createRequire",
-    platformName: "${basename}-${nodePlatform}-${nodeArchitecture}.node",
-    //platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node",
+    platformName: "${dirname}/${basename}-${nodePlatform}-${nodeArchitecture}.node",
+    //platformName: "${dirname}/${basename}-${nativePlatform}-${nativeArchitecture}.node",
     ...options
   };
 
@@ -139,13 +143,9 @@ export default function native(options) {
   };
 }
 
-
 function invertKeyValues(object) {
-  return Object.entries(object).reduce(
-    (all, [k, v]) => {
-      all[v] = k;
-      return all;
-    },
-    {}
-  );
+  return Object.entries(object).reduce((all, [k, v]) => {
+    all[v] = k;
+    return all;
+  }, {});
 }
