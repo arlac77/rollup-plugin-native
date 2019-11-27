@@ -9,7 +9,8 @@
 
 Import native code with Rollup.
 
-As there is currently no support for ```js
+As there is currently no support for
+```js
 import {x} from "module.node"
 ```
 
@@ -30,7 +31,7 @@ export default {
   input: 'src/main.js',
   output: {
     file: 'public/bundle.js',
-    format: 'iife'
+    format: 'cfs'
   },
   plugins: [
     native(
