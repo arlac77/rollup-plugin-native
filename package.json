@@ -14,8 +14,7 @@
     "test": "ava"
   },
   "keywords": [
-    "rollup",
-    "plugin",
+    "rollup-plugin",
     "native",
     "napi"
   ],
