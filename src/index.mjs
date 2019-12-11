@@ -1,6 +1,6 @@
 import { arch, platform, constants } from "os";
-import Module from "module";
 import { resolve, dirname, basename } from "path";
+import Module from "module";
 import { createFilter } from "@rollup/pluginutils";
 
 const nodePlatformToNativePlatform = {
