@@ -95,15 +95,14 @@ export default function native(options) {
   return {
     name: "native",
 
-    
+    /*
     generateBundle(options, bundle, isWrite) {
       Object.values(bundle).forEach(b => {
         const id = b.facadeModuleId;
         const filename = id.substring(process.cwd().length);  
         b.code = b.code.replace(/const\s*\{[^\}]+\}=__NATIVE_IMPORT__/,() => generateCode(filename, b.exports, options.format));
-        //console.log("generateBundle", b.code);  
       });
-    },
+    },*/
 
     load(id) {
       if (id.endsWith(".node")) {
@@ -133,7 +132,7 @@ export default function native(options) {
       return null;
     }
 
-    /*,transform(code, id) {
+    ,transform(code, id) {
       if (!filter(id)) return;
 
       if (code && id.endsWith(".node")) {
@@ -145,7 +144,7 @@ export default function native(options) {
         return { code: generateCode(filename, keys, "cjs") + `;export {${keys}}` };
       }
     }
-    */
+    
   };
 }
 

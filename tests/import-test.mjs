@@ -34,7 +34,7 @@ test("imports node naming - cjs", async t => {
   t.regex(code.output[0].code, /createRequire\("file/);
 });
 
-test("imports node naming - createRequire/esm", async t => {
+test.skip("imports node naming - createRequire/esm", async t => {
   const bundle = await rollup({
     input: "tests/fixtures/imports.mjs",
     plugins: [native()]
@@ -47,7 +47,7 @@ test("imports node naming - createRequire/esm", async t => {
   t.regex(code.output[0].code, /createRequire\("file/);
 });
 
-test("imports node naming - dlopen/esm", async t => {
+test.skip("imports node naming - dlopen/esm", async t => {
   const bundle = await rollup({
     input: "tests/fixtures/imports.mjs",
     plugins: [native({ loaderMode: "dlopen" })]
