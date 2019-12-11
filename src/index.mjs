@@ -35,7 +35,7 @@ function platformName(id, options) {
   } else {
     const properties = {
       dirname: dirname(id),
-      basename: basename(id,".node"),
+      basename: basename(id, ".node"),
       nodePlatform: platform(),
       nativePlatform: nodePlatformToNativePlatform[platform()],
       nodeArchitecture: arch(),
@@ -56,7 +56,8 @@ function platformName(id, options) {
 export default function native(options) {
   options = {
     loaderMode: "createRequire",
-    platformName: "${dirname}/${basename}-${nodePlatform}-${nodeArchitecture}.node",
+    platformName:
+      "${dirname}/${basename}-${nodePlatform}-${nodeArchitecture}.node",
     //platformName: "${dirname}/${basename}-${nativePlatform}-${nativeArchitecture}.node",
     ...options
   };
@@ -144,8 +145,5 @@ export default function native(options) {
 }
 
 function invertKeyValues(object) {
-  return Object.entries(object).reduce((all, [k, v]) => {
-    all[v] = k;
-    return all;
-  }, {});
+  return Object.fromEntries(Object.entries(object).map(([k, v]) => [v, k]));
 }
