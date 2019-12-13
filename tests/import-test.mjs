@@ -2,75 +2,43 @@ import test from "ava";
 import { rollup } from "rollup";
 import native from "../src/index.mjs";
 
-test("imports native naming - cjs", async t => {
+async function it(
+  t,
+  format,
+  loaderMode = "createRequire",
+  platformName,
+  regex
+) {
+  //  const platformName =
+  //  "${basename}-${nativePlatform}-${nativeArchitecture}.node";
+
+  if (platformName === undefined) {
+    platformName =
+      "${dirname}/${basename}-${nodePlatform}-${nodeArchitecture}.node";
+  }
+
+  const outputOptions = { format };
+  const nativeOptions = { loaderMode, platformName };
+
   const bundle = await rollup({
     input: "tests/fixtures/imports.mjs",
-    output: { file: `build/native_naming_cjs.js`, format: "cjs" },
-    plugins: [
-      native({
-        platformName: "${basename}-${nativePlatform}-${nativeArchitecture}.node"
-      })
-    ]
+    output: { file: `build/node_naming_cjs.js`, format },
+    plugins: [native(nativeOptions)]
   });
 
   t.truthy(bundle);
 
-  const code = await bundle.generate({ format: "cjs" });
+  const code = await bundle.generate(outputOptions);
 
-  t.regex(code.output[0].code, /createRequire\("file/);
-});
+  t.regex(code.output[0].code, regex);
+}
 
-test("imports node naming - cjs", async t => {
-  const bundle = await rollup({
-    input: "tests/fixtures/imports.mjs",
-    output: { file: `build/node_naming_cjs.js`, format: "cjs" },
-    plugins: [native()]
-  });
+it.title = (providedTitle = "merge", format, loaderMode = "createRequire") =>
+  `${providedTitle} import native ${format} ${loaderMode}`.trim();
 
-  t.truthy(bundle);
+test.skip(it, "cjs", "createRequire", undefined, /createRequire\("file/);
 
-  const code = await bundle.generate({ format: "cjs" });
+//test(it, "es", "createRequire", /createRequire\(import.meta.url/);
 
-  t.regex(code.output[0].code, /createRequire\("file/);
-});
-
-test.skip("imports node naming - createRequire/esm", async t => {
-  const bundle = await rollup({
-    input: "tests/fixtures/imports.mjs",
-    plugins: [native()]
-  });
-
-  t.truthy(bundle);
-
-  const code = await bundle.generate({ format: "esm" });
-
-  t.regex(code.output[0].code, /createRequire\("file/);
-});
-
-test.skip("imports node naming - dlopen/esm", async t => {
-  const bundle = await rollup({
-    input: "tests/fixtures/imports.mjs",
-    plugins: [native({ loaderMode: "dlopen" })]
-  });
-
-  t.truthy(bundle);
-
-  const code = await bundle.generate({ format: "esm" });
-
-  t.regex(code.output[0].code, /fileURLToPath\(/);
-  t.regex(code.output[0].code, /process.dlopen\(/);
-});
-
-test("imports node naming - dlopen/cjs", async t => {
-  const bundle = await rollup({
-    input: "tests/fixtures/imports.mjs",
-    plugins: [native({ loaderMode: "dlopen" })]
-  });
-
-  t.truthy(bundle);
-
-  const code = await bundle.generate({ format: "cjs" });
-
-  t.regex(code.output[0].code, /__dirname/);
-  t.regex(code.output[0].code, /process.dlopen\(/);
-});
+test(it, "cjs", "dlopen", undefined, /process.dlopen/);
+test(it, "es", "dlopen", undefined, /process.dlopen/);
