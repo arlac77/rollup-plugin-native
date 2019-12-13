@@ -1,10 +1,9 @@
 import { sampleFunction, samplePoperty } from "./sample.node";
-//export { plain } from "./plain.mjs";
+import { plain } from "./plain.mjs";
 
-export { samplePoperty, sampleFunction };
 
-/*
-export async function importer() {
-  return { samplePoperty, sampleFunction } = await import("./sample.node");
-}
-*/
+console.log('*** start ***');
+console.log(samplePoperty);
+console.log(sampleFunction("hello"));
+console.log(plain());
+console.log('*** end ***');

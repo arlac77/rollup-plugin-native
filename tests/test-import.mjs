@@ -33,8 +33,8 @@ async function it(
   t.regex(code.output[0].code, regex);
 }
 
-it.title = (providedTitle = "merge", format, loaderMode = "createRequire") =>
-  `${providedTitle} import native ${format} ${loaderMode}`.trim();
+it.title = (providedTitle = "import native", format, loaderMode = "createRequire") =>
+  `${providedTitle} ${format} ${loaderMode}`.trim();
 
 test.skip(it, "cjs", "createRequire", undefined, /createRequire\("file/);
 

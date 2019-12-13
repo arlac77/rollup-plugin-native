@@ -1,1 +1,1 @@
-export function plain() {};
+export function plain() { return 'plain'; };

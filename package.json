@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "prepare": "rollup -c",
-    "pretest": "rollup -c tests/rollup.config.js",
-    "precover": "rollup -c tests/rollup.config.js",
+    "pretest": "rollup -c tests/rollup.config.js && rollup -c tests/fixtures/rollup.config.js",
+    "precover": "rollup -c tests/rollup.config.js && rollup -c tests/fixtures/rollup.config.js",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",
     "test": "ava"
   },
@@ -27,8 +27,10 @@
   },
   "devDependencies": {
     "ava": "^2.4.0",
-    "rollup": "^1.27.11",
-    "c8": "^6.0.1"
+    "c8": "^6.0.1",
+    "esm": "^3.2.25",
+    "execa": "^3.4.0",
+    "rollup": "^1.27.11"
   },
   "repository": {
     "type": "git",
@@ -39,10 +41,18 @@
   },
   "homepage": "https://github.com/arlac77/rollup-plugin-native#readme",
   "ava": {
+    "require": [
+      "esm"
+    ],
+    "extensions": [
+      "mjs",
+      "js"
+    ],
     "babel": false,
     "compileEnhancements": false,
     "files": [
-      "build/*-test.js"
+      "build/test-*.js",
+      "tests/*-test.mjs"
     ]
   }
 }

@@ -8,7 +8,7 @@ const external = [
   ...Object.keys(devDependencies)
 ];
 
-const testFiles = ["import-test"];
+const testFiles = ["test-import"];
 
 export default [
   productionRollupConfig,
