@@ -88,7 +88,7 @@ export default function native(options) {
       default:
         return `
       import { createRequire } from "module";
-      const { ${keys} } = createRequire("file://" + __filename)("..${filename}");`;
+      const { ${keys} } = createRequire(${format === "cjs" ? '"file://" + __filename' : "import.meta.url"})("..${filename}");`;
     }
   }
 
@@ -114,7 +114,9 @@ export default function native(options) {
         const keys = Object.keys(m.exports);
         exportsForModule.set(id, keys);
 
-        return { code: `const {${keys}}=__NATIVE_IMPORT__;export { ${keys} };` };
+        return {
+          code: `const {${keys}}=__NATIVE_IMPORT__;export {${keys}};`
+        };
       }
       return null;
     },
@@ -130,9 +132,9 @@ export default function native(options) {
       }
 
       return null;
-    }
+    },
 
-    ,transform(code, id) {
+    transform(code, id) {
       if (!filter(id)) return;
 
       if (code && id.endsWith(".node")) {
@@ -141,10 +143,11 @@ export default function native(options) {
         const keys = exportsForModule.get(id);
         const filename = id.substring(process.cwd().length);
 
-        return { code: generateCode(filename, keys, "cjs") + `;export {${keys}}` };
+        return {
+          code: generateCode(filename, keys, "es") + `;export {${keys}}`
+        };
       }
     }
-    
   };
 }
 
