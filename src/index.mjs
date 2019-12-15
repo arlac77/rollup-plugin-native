@@ -4,8 +4,13 @@ import Module from "module";
 import { createFilter } from "@rollup/pluginutils";
 
 const nodePlatformToNativePlatform = {
+  aix: "aix",
   darwin: "mac",
-  linux: "linux"
+  freebsd: "freebsd",
+  linux: "linux",
+  openbsd: "openbsd",
+  sunos: "sunos",
+  win32: "win32"
 };
 
 const nativePlatformToNodePlatform = invertKeyValues(
@@ -88,7 +93,9 @@ export default function native(options) {
       default:
         return `
       import { createRequire } from "module";
-      const { ${keys} } = createRequire(${format === "cjs" ? '"file://" + __filename' : "import.meta.url"})("${filename}");`;
+      const { ${keys} } = createRequire(${
+          format === "cjs" ? '"file://" + __dirname' : "import.meta.url"
+        })("${filename}");`;
     }
   }
 
@@ -139,7 +146,7 @@ export default function native(options) {
 
       if (code && id.endsWith(".node")) {
         const keys = exportsForModule.get(id);
-        const filename = '..' + id.substring(process.cwd().length);
+        const filename = ".." + id.substring(process.cwd().length);
         console.log("TRANSFORM", id, filename);
         return {
           code: generateCode(filename, keys, "es") + `;export {${keys}}`
