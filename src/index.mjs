@@ -71,10 +71,10 @@ export default function native(options) {
       case "dlopen":
         const formatSpecific =
           format === "cjs"
-            ? `const filename = __dirname + "/..${filename}";`
+            ? `const filename = __dirname + "/" + "${filename}";`
             : `import { dirname, join } from "path";
       import { fileURLToPath } from "url";
-      const filename = join(dirname(fileURLToPath(import.meta.url)),"..${filename}");`;
+      const filename = join(dirname(fileURLToPath(import.meta.url)),"${filename}");`;
 
         return `
       import { Module } from "module";
@@ -88,7 +88,7 @@ export default function native(options) {
       default:
         return `
       import { createRequire } from "module";
-      const { ${keys} } = createRequire(${format === "cjs" ? '"file://" + __filename' : "import.meta.url"})("..${filename}");`;
+      const { ${keys} } = createRequire(${format === "cjs" ? '"file://" + __filename' : "import.meta.url"})("${filename}");`;
     }
   }
 
@@ -99,18 +99,18 @@ export default function native(options) {
     generateBundle(options, bundle, isWrite) {
       Object.values(bundle).forEach(b => {
         const id = b.facadeModuleId;
-        const filename = id.substring(process.cwd().length);  
+        const filename = '..' + id.substring(process.cwd().length);  
         b.code = b.code.replace(/const\s*\{[^\}]+\}=__NATIVE_IMPORT__/,() => generateCode(filename, b.exports, options.format));
       });
     },*/
 
     load(id) {
       if (id.endsWith(".node")) {
-        console.log("LOAD", id);
+        //console.log("LOAD", id);
         const m = new Module(id);
         m.filename = id;
         process.dlopen(m, id, constants.dlopen.RTLD_NOW);
-        console.log("EXPORTS", m.exports);
+        //console.log("EXPORTS", m.exports);
         const keys = Object.keys(m.exports);
         exportsForModule.set(id, keys);
 
@@ -138,11 +138,9 @@ export default function native(options) {
       if (!filter(id)) return;
 
       if (code && id.endsWith(".node")) {
-        console.log("TRANSFORM", id);
-
         const keys = exportsForModule.get(id);
-        const filename = id.substring(process.cwd().length);
-
+        const filename = '..' + id.substring(process.cwd().length);
+        console.log("TRANSFORM", id, filename);
         return {
           code: generateCode(filename, keys, "es") + `;export {${keys}}`
         };
