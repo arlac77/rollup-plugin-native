@@ -3,5 +3,5 @@
   "devDependencies": {
     "node-addon-api": "^1.7.1"
   },
-  "native": "${name}-${os}-${arch}.node"
+  "native": "${basename}-${os}-${nativeArch}.node"
 }

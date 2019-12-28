@@ -2,6 +2,7 @@ import { arch, platform, constants } from "os";
 import { resolve, dirname, basename } from "path";
 import Module from "module";
 import { createFilter } from "@rollup/pluginutils";
+import readPkgUp from "read-pkg-up";
 
 const nodePlatformToNativePlatform = {
   aix: "aix",
@@ -33,7 +34,24 @@ const nodeArchToNativeArch = {
 
 const nativeArchToNodeArch = invertKeyValues(nodeArchToNativeArch);
 
-function platformName(id, options) {
+/**
+ * resolve .node file from options and package.json
+ * @param {string } id 
+ * @param {Object} pkg decoded content of package.json
+ * @param {Object} options 
+ */
+function platformName(id, pkg, options) {
+
+  let pattern = options.platformName;
+
+  if(pkg.native) {
+    pattern = pkg.native;
+  }
+
+  if(pkg.devDependencies && pkg.devDependencies.prebuildify) {
+    pattern = "prebuilds/${os}-${arch}/node.napi.node";
+  }
+
   const r = id.match(/(.+)(-(\w+)-(\w+)).node$/);
   if (r) {
     return id;
@@ -41,16 +59,16 @@ function platformName(id, options) {
     const properties = {
       dirname: dirname(id),
       basename: basename(id, ".node"),
-      nodePlatform: platform(),
-      nativePlatform: nodePlatformToNativePlatform[platform()],
-      nodeArchitecture: arch(),
-      nativeArchitecture: nodeArchToNativeArch[arch()]
+      platform: platform(),
+      os: nodePlatformToNativePlatform[platform()],
+      arch: arch(),
+      nativeArch: nodeArchToNativeArch[arch()]
     };
-    return options.platformName.replace(
+    return pattern.replace(
       /\${([^}]+)}/g,
       (match, key, offset, string) => {
         if (properties[key] === undefined) {
-          throw new Error(`No such key '${key}' in (${properties})`);
+          throw new Error(`No such key '${key}' in (${JSON.stringify(properties)})`);
         }
         return properties[key];
       }
@@ -62,8 +80,7 @@ export default function native(options) {
   options = {
     loaderMode: "createRequire",
     platformName:
-      "${dirname}/${basename}-${nodePlatform}-${nodeArchitecture}.node",
-    //platformName: "${dirname}/${basename}-${nativePlatform}-${nativeArchitecture}.node",
+      "${dirname}/${basename}-${os}-${nativeArch}.node",
     ...options
   };
 
@@ -128,11 +145,13 @@ export default function native(options) {
       return null;
     },
 
-    resolveId(source, importer) {
+    async resolveId(source, importer) {
       if (source.endsWith(".node")) {
+        const { packageJson } = await readPkgUp({ cwd: dirname(importer) });
+
         const resolved = resolve(
           dirname(importer),
-          platformName(source, options)
+          platformName(source, packageJson, options)
         );
         //console.log("RESOLVEID", source, importer, resolved);
         return { id: resolved, external: false };
