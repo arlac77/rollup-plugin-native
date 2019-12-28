@@ -2,5 +2,6 @@
   "name": "sample",
   "devDependencies": {
     "node-addon-api": "^1.7.1"
-  }
+  },
+  "native": "${name}-${os}-${arch}.node"
 }
