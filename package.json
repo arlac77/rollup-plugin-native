@@ -20,7 +20,7 @@
     "napi"
   ],
   "dependencies": {
-    "@rollup/pluginutils": "^3.0.2",
+    "@rollup/pluginutils": "^3.0.3",
     "read-pkg-up": "^7.0.1"
   },
   "peerDependencies": {
