@@ -123,7 +123,7 @@ export default function native(options) {
     generateBundle(options, bundle, isWrite) {
       Object.values(bundle).forEach(b => {
         const id = b.facadeModuleId;
-        const filename = '..' + id.substring(process.cwd().length);  
+        const filename = '..' + id.slice(process.cwd().length);  
         b.code = b.code.replace(/const\s*\{[^\}]+\}=__NATIVE_IMPORT__/,() => generateCode(filename, b.exports, options.format));
       });
     },*/
@@ -165,7 +165,7 @@ export default function native(options) {
 
       if (code && id.endsWith(".node")) {
         const keys = exportsForModule.get(id);
-        const filename = ".." + id.substring(process.cwd().length);
+        const filename = ".." + id.slice(process.cwd().length);
         console.log("TRANSFORM", id, filename);
         return {
           code: generateCode(filename, keys, "es") + `;export {${keys}}`
