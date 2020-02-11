@@ -1,6 +1,6 @@
 import test from "ava";
 import { rollup } from "rollup";
-import native from "../src/index.mjs";
+import native from "../../src/index.mjs";
 
 async function it(
   t,

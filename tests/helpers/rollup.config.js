@@ -1,6 +1,6 @@
 import { builtinModules } from "module";
-import { dependencies, devDependencies } from "../package.json";
-import productionRollupConfig from "../rollup.config.js";
+import { dependencies, devDependencies } from "../../package.json";
+import productionRollupConfig from "../../rollup.config.js";
 
 const external = [
   ...builtinModules,
@@ -14,7 +14,7 @@ export default [
   productionRollupConfig,
   ...testFiles.map(file => {
     return {
-      input: `tests/${file}.mjs`,
+      input: `tests/helpers/${file}.mjs`,
       output: { exports: "named", file: `build/${file}.js`, format: "cjs" },
       external
     };
