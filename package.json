@@ -24,10 +24,10 @@
     "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
-    "ava": "^3.5.0",
+    "ava": "^3.5.1",
     "c8": "^7.1.0",
     "execa": "^4.0.0",
-    "rollup": "^2.0.2"
+    "rollup": "^2.3.0"
   },
   "repository": {
     "type": "git",
