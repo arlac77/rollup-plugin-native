@@ -1,7 +1,7 @@
 import { arch, platform, constants } from "os";
 import { resolve, dirname, basename } from "path";
 import Module from "module";
-import { createFilter } from "@rollup/pluginutils";
+import pluginutils from "@rollup/pluginutils";
 import readPkgUp from "read-pkg-up";
 
 const nodePlatformToNativePlatform = {
@@ -86,7 +86,7 @@ export default function native(options) {
 
   const exportsForModule = new Map();
 
-  const filter = createFilter(options.include, options.exclude);
+  const filter = pluginutils.createFilter(options.include, options.exclude);
 
   function generateCode(filename, keys, format) {
     switch (options.loaderMode) {

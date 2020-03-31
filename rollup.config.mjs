@@ -1,5 +1,6 @@
 import { builtinModules } from "module";
-import { dependencies } from "./package.json";
+import { readFileSync } from "fs";
+const { dependencies } = JSON.parse(readFileSync("./package.json",{encoding:"utf8"}));
 
 export default {
   input: "src/index.mjs",
