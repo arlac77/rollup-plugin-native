@@ -2,10 +2,10 @@
   "name": "rollup-plugin-native",
   "version": "0.0.0-semantic-release",
   "description": "Import native code with Rollup",
-  "main": "dist/index.js",
+  "main": "src/index.mjs",
+  "type": "module",
   "files": [
-    "src/**",
-    "dist/**"
+    "src/**"
   ],
   "scripts": {
     "prepare": "rollup -c",
