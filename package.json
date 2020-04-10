@@ -8,7 +8,6 @@
     "src/**"
   ],
   "scripts": {
-    "prepare": "rollup -c",
     "pretest": "rollup -c tests/helpers/rollup.config.mjs && rollup -c tests/fixtures/rollup.config.mjs",
     "precover": "rollup -c tests/helpers/rollup.config.mjs && rollup -c tests/fixtures/rollup.config.mjs",
     "cover": "c8 -x 'tests/**/*' --temp-directory build/tmp ava && c8 report -r lcov -o build/coverage --temp-directory build/tmp",

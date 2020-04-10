@@ -20,5 +20,5 @@ async function et(t, format, loaderMode = "createRequire") {
 et.title = (providedTitle = "end2end", format, loaderMode = "createRequire") =>
   `${providedTitle} ${format} ${loaderMode}`.trim();
 
-test(et, "js", "createRequire");
-test(et, "js", "dlopen");
+test(et, "mjs", "createRequire");
+test(et, "mjs", "dlopen");

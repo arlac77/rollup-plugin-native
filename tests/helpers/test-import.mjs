@@ -33,12 +33,13 @@ async function it(
   t.regex(code.output[0].code, regex);
 }
 
-it.title = (providedTitle = "import native", format, loaderMode = "createRequire") =>
-  `${providedTitle} ${format} ${loaderMode}`.trim();
+it.title = (
+  providedTitle = "import native",
+  format,
+  loaderMode = "createRequire"
+) => `${providedTitle} ${format} ${loaderMode}`.trim();
 
-test.skip(it, "cjs", "createRequire", undefined, /createRequire\("file/);
-
-//test(it, "es", "createRequire", /createRequire\(import.meta.url/);
-
+test(it, "cjs", "createRequire", undefined, /createRequire\("file/);
+test(it, "es", "createRequire", /createRequire\(import.meta.url/);
 test(it, "cjs", "dlopen", undefined, /process.dlopen/);
 test(it, "es", "dlopen", undefined, /process.dlopen/);

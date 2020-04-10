@@ -1,7 +1,9 @@
 import { readFileSync } from "fs";
 import { builtinModules } from "module";
 import productionRollupConfig from "../../rollup.config.mjs";
-const { dependencies, devDependencies } = JSON.parse(readFileSync("package.json",{encoding:"utf8"}));
+const { dependencies, devDependencies } = JSON.parse(
+  readFileSync("package.json", { encoding: "utf8" })
+);
 
 const external = [
   ...builtinModules,
