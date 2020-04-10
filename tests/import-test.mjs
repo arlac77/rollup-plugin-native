@@ -1,6 +1,6 @@
 import test from "ava";
 import { rollup } from "rollup";
-import native from "../../src/index.mjs";
+import native from "../src/index.mjs";
 
 async function it(
   t,
@@ -39,7 +39,7 @@ it.title = (
   loaderMode = "createRequire"
 ) => `${providedTitle} ${format} ${loaderMode}`.trim();
 
-test(it, "cjs", "createRequire", undefined, /createRequire\("file/);
-test(it, "es", "createRequire", /createRequire\(import.meta.url/);
+test(it, "cjs", "createRequire", undefined, /createRequire\(/);
+test(it, "es", "createRequire", undefined, /createRequire\(import.meta.url/);
 test(it, "cjs", "dlopen", undefined, /process.dlopen/);
 test(it, "es", "dlopen", undefined, /process.dlopen/);
