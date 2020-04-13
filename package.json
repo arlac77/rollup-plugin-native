@@ -19,14 +19,14 @@
     "napi"
   ],
   "dependencies": {
-    "@rollup/pluginutils": "^3.0.8",
+    "@rollup/pluginutils": "^3.0.9",
     "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
     "ava": "^3.6.0",
     "c8": "^7.1.0",
     "execa": "^4.0.0",
-    "rollup": "^2.4.0"
+    "rollup": "^2.6.1"
   },
   "repository": {
     "type": "git",
