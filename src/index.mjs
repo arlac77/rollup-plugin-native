@@ -89,6 +89,10 @@ export default function native(options) {
   const filter = pluginutils.createFilter(options.include, options.exclude);
 
   function generateCode(filename, keys, format) {
+    //Convert the filename to use a forward slash separator so that backslashes
+    //aren't interpreted as escapes in the template literals below
+    filename = filename.replace(/\\/g,'/');
+
     switch (options.loaderMode) {
       case "dlopen":
         const formatSpecific =
