@@ -34,10 +34,10 @@ export default {
     format: 'cfs'
   },
   plugins: [
-    native(
+    native({
     platformName: "${dirname}/precompiled/${nodePlatform}-${nodeArchitecture}/node.napi.node",
     //platformName: "${dirname}/${basename}-${nativePlatform}-${nativeArchitecture}.node",
-    )
+    })
   ]
 }
 ```
