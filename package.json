@@ -19,7 +19,7 @@
     "napi"
   ],
   "dependencies": {
-    "@rollup/pluginutils": "^3.0.10",
+    "@rollup/pluginutils": "^4.0.0",
     "read-pkg-up": "^7.0.1"
   },
   "devDependencies": {
