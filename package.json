@@ -2,7 +2,7 @@
   "name": "rollup-plugin-native",
   "version": "0.0.0-semantic-release",
   "description": "Import native code with Rollup",
-  "main": "src/index.mjs",
+  "main": "./src/index.mjs",
   "type": "module",
   "files": [
     "src/**"
