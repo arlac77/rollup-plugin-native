@@ -20,13 +20,13 @@
   ],
   "dependencies": {
     "@rollup/pluginutils": "^5.0.0",
-    "read-pkg-up": "^10.0.0"
+    "read-pkg-up": "^11.0.0"
   },
   "devDependencies": {
-    "ava": "^5.0.1",
-    "c8": "^8.0.0",
-    "execa": "^7.2.0",
-    "rollup": "^3.0.1"
+    "ava": "^6.0.0",
+    "c8": "^9.0.0",
+    "execa": "^9.0.1",
+    "rollup": "^4.0.0"
   },
   "repository": {
     "type": "git",
